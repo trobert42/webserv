@@ -1,0 +1,29 @@
+h1{
+	font-family: helvetica;
+	font-style: italic;
+	font-size: 3em;
+	text-align: center;
+	/*background-color: #FF7400;*/
+	background: linear-gradient(90deg, #FF7400, #D8D800);
+}
+
+.Banner{
+	padding: 6.5em;
+	background-image: url('../documents/ok.gif');
+}
+
+p{
+	font-size: 15px;
+	text-align: right;
+}
+
+.msg{
+	position: absolute;
+	top: 90%;
+	left: 82%;
+}
+
+h2{
+	font-size: 2em;
+	text-align: center;
+}
