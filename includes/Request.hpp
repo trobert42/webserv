@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agras <agras@student.42.fr>                +#+  +:+       +#+        */
+/*   By: trobert <trobert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 15:15:36 by trobert           #+#    #+#             */
-/*   Updated: 2023/08/04 23:07:00 by agras            ###   ########.fr       */
+/*   Updated: 2023/08/08 20:03:48 by trobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ public:
 
 	void	printRequestInfo(void)
 	{
-		std::cout << method << " " << url.path << " " << "HTTP/" << version.major << "." << version.minor << std::endl;
 		if (header_fields.count("host") > 0)
 			std::cout << "host: " << header_fields["host"]->getValue() << std::endl;
 		if (header_fields.count("user-agent") > 0)

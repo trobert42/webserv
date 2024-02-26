@@ -6,7 +6,7 @@
 /*   By: trobert <trobert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 15:17:56 by trobert           #+#    #+#             */
-/*   Updated: 2023/08/08 17:36:54 by trobert          ###   ########.fr       */
+/*   Updated: 2023/08/08 20:07:04 by trobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ void	Server::handleReadWriteOperations()
 		}
 		catch(const std::exception &e)
 		{
-			std::cerr << RED << e.what() << WHITE << std::endl;
+			// std::cerr << RED << e.what() << WHITE << std::endl;
 			closeConnection(m_events[i].data.fd);
 			i++;
 		}
@@ -249,6 +249,7 @@ bool	Server::isSocketServerFd(int serv_fd) const
 
 void	Server::addNewSocket(int new_client, struct sockaddr_in client_addr)
 {
+	(void)client_addr;
 	setSocketOpt(new_client);
 	struct epoll_event	ev;
 
@@ -259,9 +260,9 @@ void	Server::addNewSocket(int new_client, struct sockaddr_in client_addr)
 		throw BadConnectionException(EPOLLCTL_ERR);
 	else
 	{
-		std::cout << YELLOW << "New connection established" << WHITE << std::endl;
-		printSocketInfo(new_client, inet_ntoa(client_addr.sin_addr), client_addr.sin_port);
-		std::cout << std::endl;
+		// std::cout << YELLOW << "New connection established" << WHITE << std::endl;
+		// printSocketInfo(new_client, inet_ntoa(client_addr.sin_addr), client_addr.sin_port);
+		// std::cout << std::endl;
 	}
 }
 
@@ -324,12 +325,12 @@ void	Server::closeConnection(int fd)
 {
 	if (connections.count(fd) == 0)
 	{
-		std::cerr << "Could not close connection. Already closed." << std::endl;
+		// std::cerr << "Could not close connection. Already closed." << std::endl;
 		return;
 	}
 	epoll_ctl(m_ep_fd, EPOLL_CTL_DEL, fd, NULL);
 	close(fd);
-	std::cout << RED << "Connection closed for client [" << fd << "]" << WHITE << std::endl;
+	// std::cout << RED << "Connection closed for client [" << fd << "]" << WHITE << std::endl;
 	connections.erase(fd);
 }
 
@@ -338,12 +339,12 @@ void	Server::closeAllFds(void)
 	std::vector<int>::const_iterator it = m_serv_fds.begin();
 	for (; it != m_serv_fds.end(); ++it)
 	{
-		std::cout << RED << "Connection closed for server fd [" << *it << "]" << WHITE << std::endl;
+		// std::cout << RED << "Connection closed for server fd [" << *it << "]" << WHITE << std::endl;
 		close(*it);
 	}
 	if (m_ep_fd != -1)
 	{
-		std::cout << RED << "Connection closed for m_ep_fd [" << m_ep_fd << "]" << WHITE << std::endl;
+		// std::cout << RED << "Connection closed for m_ep_fd [" << m_ep_fd << "]" << WHITE << std::endl;
 		close(m_ep_fd);
 	}
 	for (std::map<int, Connection>::iterator ito = connections.begin(); ito != connections.end();)

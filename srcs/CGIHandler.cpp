@@ -6,7 +6,7 @@
 /*   By: trobert <trobert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 17:46:25 by trobert           #+#    #+#             */
-/*   Updated: 2023/08/04 12:21:17 by trobert          ###   ########.fr       */
+/*   Updated: 2023/08/08 20:03:24 by trobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ char **CGIHandler::getEnv(void)
 	}
 	catch (std::bad_alloc &e)
 	{
-		std::cerr << e.what() << std::endl;
+		// std::cerr << e.what() << std::endl;
 		throw Request::InvalidHttpRequest("internal Server Error, 500 ERROR", InternalServerError);
 	}
 }
@@ -199,7 +199,7 @@ void	CGIHandler::executeCGI(void)
 				throw ExecutionCGIFailedException(DUP2_ERR);
 			if (execve(getBin().c_str(), m_args, m_env) < 0)
 			{
-				std::cerr << "error execve() " << errno << std::endl;
+				// std::cerr << "error execve() " << errno << std::endl;
 				throw ExecutionCGIFailedException(EXECVE_ERR);
 			}
 		}
@@ -245,7 +245,7 @@ void	CGIHandler::executeCGI(void)
 			free(m_args[0]);
 		if (m_args[1] != NULL)
 			free(m_args[1]);
-		std::cerr << e.what() << std::endl;
+		// std::cerr << e.what() << std::endl;
 		throw Request::InvalidHttpRequest("internal Server Error, 500 ERROR", InternalServerError);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: trobert <trobert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:16:13 by agras             #+#    #+#             */
-/*   Updated: 2023/08/08 19:46:59 by trobert          ###   ########.fr       */
+/*   Updated: 2023/08/08 20:04:49 by trobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -380,14 +380,14 @@ void	HttpWorker::handleRequest(Connection& connection, std::string ip)
 	}
 	catch (const Request::InvalidHttpRequest& e)
 	{
-		std::cerr << RED << "CATCHED ERROR : " << e.what() << WHITE << std::endl;
+		// std::cerr << RED << "CATCHED ERROR : " << e.what() << WHITE << std::endl;
 		connection.read_buffer.head_pos = connection.read_buffer.data.size();
  		connection.getNextRequest().state = RESPONSE_READY;
 		makeResponse(connection.getNextRequest(), e.getStatus(), e.what());
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << RED << "CATCHED ERROR : " << e.what() << WHITE << std::endl;
+		// std::cerr << RED << "CATCHED ERROR : " << e.what() << WHITE << std::endl;
 		connection.read_buffer.head_pos = connection.read_buffer.data.size();
 		connection.getNextRequest().state = RESPONSE_READY;
 		makeResponse(connection.getNextRequest(), InternalServerError, e.what());
@@ -401,27 +401,27 @@ void	HttpWorker::serveRequest(Request &request)
 {
 	if (request.location != "serv" && !request.context.getValue(request.location, "rewrite").empty())
 	{
-		std::cout << GREY << "-rewrite" << WHITE << std::endl;
+		// std::cout << GREY << "-rewrite" << WHITE << std::endl;
 		makeResponse(request, static_cast<e_status_code>(atoi(request.context.getValue(request.location, "rewrite")[0].c_str())), "");
 		response_builder.addHeaderField(new Location(request.context.getValue(request.location, "rewrite")[1]));
 		request.state = RESPONSE_READY;
 		return;
 	}
 	std::string path = request.context.getValue(request.location, "root")[0] + request.url.path;
-	std::cout << GREY
-		<< "-Inside serverRequest" << std::endl
-		<< "  block server used n" << request.context.getBlockIndex()
-		<< " [" << request.context.getValue("serv", "ip address")[0] << ":" << request.context.getPort() << "]" << std::endl
-		<< "  request.location = [" << request.location << "]" << std::endl
-		<< "  path = [" << path << "]" << WHITE << std::endl << std::endl;
+	// std::cout << GREY
+		// << "-Inside serverRequest" << std::endl
+		// << "  block server used n" << request.context.getBlockIndex()
+		// << " [" << request.context.getValue("serv", "ip address")[0] << ":" << request.context.getPort() << "]" << std::endl
+		// << "  request.location = [" << request.location << "]" << std::endl
+		// << "  path = [" << path << "]" << WHITE << std::endl << std::endl;
 	if (isFileExisting(path) == false)
 	{
-		std::cout << GREY << "-no existing path = [" << path << "]" << WHITE << std::endl;
+		// std::cout << GREY << "-no existing path = [" << path << "]" << WHITE << std::endl;
 		throw Request::InvalidHttpRequest("what's that page? NOT FOUND 404 ERROR", NotFound);
 	}
 	if (isFileInaccessible(path))
 	{
-		std::cout << GREY << "-can't access path = [" << path << "]" << WHITE << std::endl;
+		// std::cout << GREY << "-can't access path = [" << path << "]" << WHITE << std::endl;
 		throw Request::InvalidHttpRequest("not authorized, FORBIDDEN 403 ERROR", Forbidden);
 	}
 	if (isCGI(path) && request.context.getValue(request.location, "cgi")[0] == "off")
@@ -433,7 +433,7 @@ void	HttpWorker::serveRequest(Request &request)
 	else if (request.method == POST)
 		processPost(request);
 	request.state = RESPONSE_READY;
-	std::cout << std::endl;
+	// std::cout << std::endl;
 }
 
 std::string	makeCGIBody(ResponseBuilder	&response_builder, Request *request, std::string &path, std::string &env)
@@ -479,18 +479,18 @@ void	HttpWorker::processResponse(Request& request, Connection& connection)
 void	HttpWorker::processGet(Request &request)
 {
 	std::string path = request.context.getValue(request.location, "root")[0] + request.url.path;
-	std::cout << GREY
-			<< "-Inside processGet() with location [" << request.location << "]" << std::endl
-			<< "  request.url.path = [" << request.url.path << "]"<< std::endl
-			<< "  complete root+path = [" << path << "]" << WHITE << std::endl;
+	// std::cout << GREY
+			// << "-Inside processGet() with location [" << request.location << "]" << std::endl
+			// << "  request.url.path = [" << request.url.path << "]"<< std::endl
+			// << "  complete root+path = [" << path << "]" << WHITE << std::endl;
 	if (!path.empty() && path.find_last_of('/') == path.size() - 1)
 	{
-		std::cout << GREY << "	-URL finishing by /" << WHITE << std::endl;
+		// std::cout << GREY << "	-URL finishing by /" << WHITE << std::endl;
 		if (!request.context.getValue(request.location, "index").empty())
 		{
 			path += request.context.getValue(request.location, "index")[0];
-			std::cout << GREY << "		-Index not empty" << std::endl
-				<< "		  path = [" << path << "]" << WHITE << std::endl;
+			// std::cout << GREY << "		-Index not empty" << std::endl
+				// << "		  path = [" << path << "]" << WHITE << std::endl;
 			if (isFileExisting(path) == false)
 				throw Request::InvalidHttpRequest("what's that page? NOT FOUND 404 ERROR", NotFound);
 			if (isFileInaccessible(path))
@@ -501,29 +501,29 @@ void	HttpWorker::processGet(Request &request)
 		{
 			if (request.context.getValue(request.location,"cgi")[0] == "off")
 			{
-				std::cout << GREY << "		-Index empty, autoindex off -> no page" << WHITE << std::endl;
+				// std::cout << GREY << "		-Index empty, autoindex off -> no page" << WHITE << std::endl;
 				throw Request::InvalidHttpRequest("cgi's off, BAD GATEWAY 502 ERROR", BadGateway);
 			}
 			request.filename =  "../" + path;
-			std::cout << GREY << "		-Index empty & autoindex on --> autoindex cgi" << std::endl
-				<< "		Route = [" << request.filename << "]" << WHITE << std::endl;
+			// std::cout << GREY << "		-Index empty & autoindex on --> autoindex cgi" << std::endl
+				// << "		Route = [" << request.filename << "]" << WHITE << std::endl;
 			std::string script_path = "html/autoindex.php";
 			makeResponse(request, Ok, makeCGIBody(response_builder, &request, script_path, request.filename));
 		}
 		else
 		{
-			std::cout << GREY << "		-Index empty, autoindex off -> no page" << WHITE << std::endl;
+			// std::cout << GREY << "		-Index empty, autoindex off -> no page" << WHITE << std::endl;
 			makeResponse(request, Forbidden, "FORBIDDEN, 403 ERROR");
 		}
 	}
 	else if (isCGI(request.url.path))
 	{
-		std::cout << GREY << "	-Url finishing by php --> cgi execution" << WHITE << std::endl;
+		// std::cout << GREY << "	-Url finishing by php --> cgi execution" << WHITE << std::endl;
 		makeResponse(request, Ok, makeCGIBody(response_builder, &request, path, request.location));
 	}
 	else
 	{
-		std::cout << GREY << "	-Retrieving normal Get method" << WHITE << std::endl;
+		// std::cout << GREY << "	-Retrieving normal Get method" << WHITE << std::endl;
 		makeResponseFromFile(Ok, path);
 	}
 }
@@ -579,7 +579,7 @@ void	HttpWorker::handlePostMultipart(Request &request)
 		}
 		else
 		{
-			std::cerr << "Form field: " << field_name << ", Value: " << data << std::endl;
+			// std::cerr << "Form field: " << field_name << ", Value: " << data << std::endl;
 		}
 		pos = end + boundary.length();
 	}
@@ -588,14 +588,14 @@ void	HttpWorker::handlePostMultipart(Request &request)
 
 void	HttpWorker::processPost(Request &request)
 {
-	std::cout << GREY << "-Inside processPost() with location [" << request.location << "]" << WHITE << std::endl;
+	// std::cout << GREY << "-Inside processPost() with location [" << request.location << "]" << WHITE << std::endl;
 	response_builder.reset();
 	response_builder.setProtocol("HTTP/1.1");
 	std::string path = request.context.getValue(request.location, "root")[0] + request.url.path;
 	if (request.header_fields.count("content-type") < 1)
 		throw Request::InvalidHttpRequest("no Content-Type header, BAD REQUEST 400 ERROR", BadRequest);
 	std::string content_type = request.header_fields["content-type"]->getValue();
-	std::cout << GREY << " content-type: " << content_type << WHITE << std::endl;
+	// std::cout << GREY << " content-type: " << content_type << WHITE << std::endl;
 	if (!http_tables->getMIMETypeExtensions(content_type).empty())
 		throw Request::InvalidHttpRequest("invalid value for Content-Type header, UNSUPPORTED MEDIA TYPE 415 ERROR", UnsupportedMediaType);
 	if (content_type.find("multipart/form-data") != std::string::npos)
