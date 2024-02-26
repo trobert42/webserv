@@ -18,11 +18,11 @@ Webserv is a project marking the introduction to socket programming. The objecti
 ```
 
 ## Usage
-
 When its done compiling, you go to your chrome browser (firefox also works) and write on the URL bar "localhost:8080" to access to the website.
 
 ## 💬
 Thanks Antoine, loved your dedication for the project, your curiosity whether about the knowledge/concepts of websocket or the refactoring principles. Working with you made me more curious about the underlayings notions. Hope to work with you soon !
 
 ## Screenshots
+![](https://github.com/trobert42/webserv/blob/main/webserv_screenshot.png)
 
